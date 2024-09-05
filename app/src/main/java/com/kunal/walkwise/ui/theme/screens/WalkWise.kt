@@ -14,6 +14,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,6 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kunal.walkwise.MainViewModel
 import com.kunal.walkwise.services.StepTrackingService
 import com.kunal.walkwise.ui.theme.WalkWiseTheme
 
@@ -37,6 +40,10 @@ fun WalkWise(
     }
 
     val context = LocalContext.current
+
+    val mainViewModel = viewModel<MainViewModel>()
+
+    val steps by mainViewModel.userStepsData.collectAsState()
 
     val requestPermissionLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions()) { map ->
@@ -53,7 +60,7 @@ fun WalkWise(
         modifier = modifier.fillMaxSize()
     ) {
         Text(
-            text = "0",
+            text = steps.toString(),
             fontSize = 64.sp,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
